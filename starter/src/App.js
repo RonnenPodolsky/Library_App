@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { get, getAll, search, update } from "./BooksAPI";
+import { getAll, search, update } from "./BooksAPI";
 
 import CurrentlyReadingShelf from "./components/CurrentlyReadingShelf";
 import ReadBooksShelf from "./components/ReadBooksShelf";
@@ -15,6 +15,7 @@ function App() {
   const [readBooks, setReadbooks] = useState([]);
   const [wantToReadBooks, setWantToReadBooks] = useState([]);
   const [currentlyReadingBooks, setcurrentlyReadingBooks] = useState([]);
+  const [searchedBooks, setSearchedBooks] = useState([])
 
   const sortBookstoShelfs = async () => {
     getAll().then(data => {
@@ -41,49 +42,63 @@ function App() {
   useEffect(() => {
     sortBookstoShelfs()
   }, [])
-  
-const removeBookFromShelves = async (book) => {
-  await update(book, "none");
-  sortBookstoShelfs();
-}
+
+  const removeBookFromShelves = async (book) => {
+    await update(book, "none");
+    sortBookstoShelfs();
+  }
 
   const removeFromCurrentBooks = async (e, selectedBook) => {
-    if(e.target.value === "none"){
+    if (e.target.value === "none") {
       await removeBookFromShelves(selectedBook);
       return;
     }
     await update(selectedBook, e.target.value);
-    let updatedCurrentlyReadingBooks = currentlyReadingBooks.filter((book) => book.id != selectedBook.id)
+    let updatedCurrentlyReadingBooks = currentlyReadingBooks.filter((book) => book.id !== selectedBook.id)
     setcurrentlyReadingBooks(updatedCurrentlyReadingBooks);
     sortBookstoShelfs();
   }
 
   const removeFromWantToReadBooks = async (e, selectedBook) => {
-    if(e.target.value === "none"){
+    if (e.target.value === "none") {
       await removeBookFromShelves(selectedBook);
       return;
     }
     await update(selectedBook, e.target.value);
-    let updatedWantToReadBooks = wantToReadBooks.filter((book) => book.id != selectedBook.id)
+    let updatedWantToReadBooks = wantToReadBooks.filter((book) => book.id !== selectedBook.id)
     setWantToReadBooks(updatedWantToReadBooks);
     sortBookstoShelfs();
   }
 
   const removeFromReadBooks = async (e, selectedBook) => {
-    if(e.target.value === "none"){
+    if (e.target.value === "none") {
       await removeBookFromShelves(selectedBook);
       return;
     }
     await update(selectedBook, e.target.value);
-    let updatedReadBooks = readBooks.filter((book) => book.id != selectedBook.id)
+    let updatedReadBooks = readBooks.filter((book) => book.id !== selectedBook.id)
     setReadbooks(updatedReadBooks);
     sortBookstoShelfs();
   }
 
+  const searchBooks = async (e) => {
+    try {
+      let books = await search(e.target.value);
+      if (!books || books.error === "empty query") {
+        setSearchedBooks([])
+        return;
+      }
+      setSearchedBooks(books)
+    }
+    catch (e) {
+      console.log(e);
+    }
+}
+
   return (
     <div className="app">
       {showSearchPage ? (
-        <SearchMenu showSearchPage={showSearchPage} setShowSearchpage={setShowSearchpage} />
+        <SearchMenu showSearchPage={showSearchPage} setShowSearchpage={setShowSearchpage} searchBooks={searchBooks} searchedBooks={searchedBooks} setSearchedBooks={setSearchedBooks} />
       ) : (
         <div className="list-books">
           <Title />
