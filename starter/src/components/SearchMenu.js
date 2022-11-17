@@ -1,6 +1,6 @@
 import BookInSearch from './BookInSearch';
 
-const SearchMenu = ({ setShowSearchpage, showSearchPage, searchBooks, searchedBooks, setSearchedBooks }) => {
+const SearchMenu = ({ setShowSearchpage, showSearchPage, searchBooks, searchedBooks, setSearchedBooks, findBookShelf, changeShelf }) => {
 
   return (
     <div className="search-books">
@@ -26,7 +26,7 @@ const SearchMenu = ({ setShowSearchpage, showSearchPage, searchBooks, searchedBo
       <div className="search-books-results">
         <ol className="books-grid">
           {searchedBooks.map(book => {
-            return <BookInSearch book={book} key={book.id} />
+            return <BookInSearch book={book} key={book.id} findBookShelf={findBookShelf} changeShelf={changeShelf}/>
           })}
         </ol>
       </div>

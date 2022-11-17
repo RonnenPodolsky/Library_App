@@ -1,4 +1,5 @@
-const BookInSearch = ({ book }) => {
+const BookInSearch = ({ book, findBookShelf, changeShelf }) => {
+    console.log(book)
     return (
         <li>
             <div className="book">
@@ -13,11 +14,13 @@ const BookInSearch = ({ book }) => {
                         }}
                     ></div>
                     <div className="book-shelf-changer">
-                        <select value={book.shelf}>
-                            <option disabled>Add to... </option>
+                        <select value={findBookShelf(book)} onChange={(e) => changeShelf(e, book)}>
+                            <option value="noShelf" disabled>Add to... </option>
                             <option value="currentlyReading">Currently Reading</option>
                             <option value="wantToRead">Want to Read</option>
                             <option value="read">Read</option>
+                            <option value="none">None</option>
+
                         </select>
                     </div>
                 </div>

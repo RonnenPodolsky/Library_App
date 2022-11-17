@@ -93,12 +93,59 @@ function App() {
     catch (e) {
       console.log(e);
     }
-}
+  }
+
+  const findBookShelf = (book) => {
+    if (currentlyReadingBooks.find(bookInShelf => book.id === bookInShelf.id)) {
+      return "currentlyReading"
+    };
+    if (readBooks.find(bookInShelf => book.id === bookInShelf.id)) {
+      return "read"
+    };
+    if (wantToReadBooks.find(bookInShelf => book.id === bookInShelf.id)) {
+      return "wantToRead"
+    };
+
+    return "noShelf";
+  }
+
+  const changeShelf = async (e, book) => {
+    if (currentlyReadingBooks.find(bookInShelf => book.id === bookInShelf.id)) {
+      await removeFromCurrentBooks(e, book)
+      return;
+    }
+    if (readBooks.find(bookInShelf => book.id === bookInShelf.id)) {
+      await removeFromReadBooks(e, book)
+      return;
+    };
+    if (wantToReadBooks.find(bookInShelf => book.id === bookInShelf.id)) {
+      await removeFromWantToReadBooks(e, book)
+      return;
+    };
+
+    await update(book, e.target.value);
+    
+    switch (e.target.value) {
+      case ('read'):
+        let updatedReadBooks = readBooks.filter((randomBook) => randomBook.id !== book.id)
+        setReadbooks(updatedReadBooks);
+        break;
+      case ('currentlyReading'):
+        let updatedCurrentlyReadingBooks = currentlyReadingBooks.filter((randomBook) => randomBook.id !== book.id)
+        setcurrentlyReadingBooks(updatedCurrentlyReadingBooks);
+        break;
+      case ('wantToRead'):
+        let updateWantToRead = wantToReadBooks.filter((randomBook) => randomBook.id !== book.id)
+        setWantToReadBooks(updateWantToRead);
+    }
+
+    sortBookstoShelfs();
+  }
 
   return (
     <div className="app">
       {showSearchPage ? (
-        <SearchMenu showSearchPage={showSearchPage} setShowSearchpage={setShowSearchpage} searchBooks={searchBooks} searchedBooks={searchedBooks} setSearchedBooks={setSearchedBooks} />
+        <SearchMenu showSearchPage={showSearchPage} setShowSearchpage={setShowSearchpage} searchBooks={searchBooks} searchedBooks={searchedBooks} setSearchedBooks={setSearchedBooks} findBookShelf={findBookShelf} changeShelf={changeShelf} />
       ) : (
         <div className="list-books">
           <Title />
