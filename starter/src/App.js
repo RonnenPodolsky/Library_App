@@ -37,8 +37,6 @@ function App() {
     })
   }
 
-  // search('React').then(data => console.log(data))
-
   useEffect(() => {
     sortBookstoShelfs()
   }, [])
@@ -106,7 +104,7 @@ function App() {
       return "wantToRead"
     };
 
-    return "noShelf";
+    return "none";
   }
 
   const changeShelf = async (e, book) => {
@@ -137,6 +135,8 @@ function App() {
       case ('wantToRead'):
         let updateWantToRead = wantToReadBooks.filter((randomBook) => randomBook.id !== book.id)
         setWantToReadBooks(updateWantToRead);
+        break;
+      default:
     }
 
     sortBookstoShelfs();
