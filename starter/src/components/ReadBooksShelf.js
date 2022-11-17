@@ -1,4 +1,4 @@
-const ReadBooksShelf = ({ readBooks }) => {
+const ReadBooksShelf = ({ readBooks, removeFromReadBooks }) => {
     return (
         <div className="bookshelf">
             <h2 className="bookshelf-title">Read Books</h2>
@@ -18,13 +18,9 @@ const ReadBooksShelf = ({ readBooks }) => {
                                         }}
                                     ></div>
                                     <div className="book-shelf-changer">
-                                        <select>
-                                            <option value="none" disabled>
-                                                Move to...
-                                            </option>
-                                            <option value="currentlyReading">
-                                                Currently Reading
-                                            </option>
+                                        <select value={book.shelf} onChange={(e) => removeFromReadBooks(e, book)}>
+                                            <option disabled>Move to... </option>
+                                            <option value="currentlyReading">Currently Reading</option>
                                             <option value="wantToRead">Want to Read</option>
                                             <option value="read">Read</option>
                                             <option value="none">None</option>
